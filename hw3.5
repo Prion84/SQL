@@ -17,3 +17,18 @@ ON l1.DeviceID = r1.DeviceID
 GROUP BY Source
 ORDER BY NumChecks  
 LIMIT 100
+
+3.8
+'''Выведите идентификаторы устройств пользователей, которые совершили как минимум одну покупку за последний месяц (октябрь 2019). Используйте сортировку по возрастанию DeviceID и укажите минимальное значение. Hint: для извлечения месяца из даты можно использовать toMonth() или  toStartOfMonth(), предварительно приведя BuyDate к типу date.'''
+
+SELECT 
+DeviceID,
+COUNT(UserID) as NumChecks
+FROM default.checks as l 
+LEFT JOIN default.devices as r 
+ON l.UserID = r.UserID 
+WHERE toStartOfMonth(toDateTime(BuyDate))=='2019-10-01'
+GROUP BY DeviceID
+HAVING NumChecks > 0
+ORDER BY DeviceID ASC
+LIMIT 100
