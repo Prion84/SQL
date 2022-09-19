@@ -1,0 +1,20 @@
+'''Давайте проверим, пользователи пришедшие из какого источника совершили наибольшее число покупок. В качестве ответа выберите название Source, юзеры которого совершили больше всего покупок.
+Hint: Для этого используйте UserID, DeviceID и Source из соответствующих таблиц. Считать уникальные значения здесь не нужно.'''
+
+SELECT 
+Source,
+COUNT(UserID) as NumChecks 
+
+FROM(
+SELECT 
+*
+FROM default.checks as l 
+LEFT JOIN default.devices as r 
+ON l.UserID = r.UserID  
+) as r1
+
+JOIN default.installs as l1 
+ON l1.DeviceID = r1.DeviceID  
+GROUP BY Source
+ORDER BY NumChecks  
+LIMIT 100
