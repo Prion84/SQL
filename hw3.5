@@ -32,3 +32,17 @@ GROUP BY DeviceID
 HAVING NumChecks > 0
 ORDER BY DeviceID ASC
 LIMIT 100
+
+3.9
+'''Проверим, сколько товаров (events) в среднем просматривают пользователи с разных платформ (Platform), и пришедшие из разных источников  (Source). Для этого объедините таблицы events и installs, и посчитайте, сколько просмотров в среднем приходится на каждую пару платформа-канал привлечения. Отсортируйте полученную табличку по убыванию среднего числа просмотров. В качестве ответа укажите платформу и источник, пользователи которого в среднем просматривали товары бóльшее число раз.'''
+
+SELECT 
+Platform,
+Source,
+avg(events) as event
+FROM default.events as l 
+JOIN default.installs as r 
+ON l.DeviceID = r.DeviceID 
+GROUP BY Platform , Source
+ORDER BY event DESC
+LIMIT 100
