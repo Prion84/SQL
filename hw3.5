@@ -46,3 +46,14 @@ ON l.DeviceID = r.DeviceID
 GROUP BY Platform , Source
 ORDER BY event DESC
 LIMIT 100
+
+3.10 
+'''Давайте посчитаем число уникальных DeviceID в инсталлах, для которых присутствуют просмотры в таблице events с разбивкой по платформам (поле Platform). Для этого можно отобрать все строки только из таблицы installs, для которых нашлось соответствие в таблице events. В качестве ответа введите число инсталлов, для которых нашлись просмотры, на платформе android.'''
+SELECT 
+
+Platform,
+uniqExact(DeviceID) as Uniqal
+FROM default.events as l 
+JOIN default.installs as r 
+ON l.DeviceID = r.DeviceID 
+GROUP BY Platform 
