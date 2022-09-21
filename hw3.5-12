@@ -67,9 +67,9 @@ SELECT
 Source,
 DeviceID
 FROM events as l
-LEFT JOIN installs as r
+LEFT ANTI JOIN installs as r
 ON l.DeviceID = r.DeviceID
-WHERE Source = ''
+--WHERE Source = ''
 --GROUP BY DeviceID 
 ORDER BY DeviceID  DESC
 LIMIT 100
