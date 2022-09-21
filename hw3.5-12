@@ -57,3 +57,19 @@ FROM default.events as l
 JOIN default.installs as r 
 ON l.DeviceID = r.DeviceID 
 GROUP BY Platform 
+
+
+
+12. 
+'''Представим, что в логирование DeviceID в событиях закралась ошибка - часть ID была записана в базу некорректно. Это привело к тому, что в таблице с событиями появились DeviceID, для которых нет инсталлов. Нам надо отобрать примеры DeviceID из таблицы event, которых нет в таблице installs, чтобы отправить их команде разработчиков на исправление.  Выведите 10 уникальных DeviceID, которые присутствуют в таблице events, но отсутствуют в installs, отсортировав их в порядке убывания. В качестве ответа введите первый DeviceID из списка.  '''
+SELECT
+
+Source,
+DeviceID
+FROM events as l
+LEFT JOIN installs as r
+ON l.DeviceID = r.DeviceID
+WHERE Source = ''
+--GROUP BY DeviceID 
+ORDER BY DeviceID  DESC
+LIMIT 100
