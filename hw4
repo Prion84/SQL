@@ -117,3 +117,25 @@ FROM listings
 GROUP by neighbourhood_cleansed
 ORDER BY AVG_price ASC
 LIMIT 100
+
+4.10
+'''В каких районах Берлина средняя площадь жилья, которое сдаётся целиком, является наибольшей? Отсортируйте по среднему и выберите топ-3. 
+
+neighbourhood_cleansed – район
+square_feet – площадь
+room_type – тип (нужный – 'Entire home/apt')'''
+SELECT 
+
+neighbourhood_cleansed,
+AVG(toFloat32OrNull(square_feet))  AS AVG_square
+--AVG(toFloat32OrNull(replaceRegexpAll(square_feet,'[$,]','')))  AS AVG_price
+
+
+FROM listings 
+WHERE room_type = 'Entire home/apt'
+GROUP by neighbourhood_cleansed
+--,AVG_square
+ORDER BY AVG_square DESC
+LIMIT 100
+
+
