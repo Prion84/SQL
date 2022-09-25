@@ -69,7 +69,7 @@ ORDER BY avg_price DESC
 LIMIT 100
 
 4.7
-'''
+
 SELECT 
 host_id,
 groupArray(id),
@@ -78,4 +78,25 @@ FROM listings
 GROUP by host_id
 ORDER BY dif_price DESC
 LIMIT 100
-'''
+
+4.8
+'''Теперь сгруппируйте данные по типу жилья и выведите средние значения цены за ночь, размера депозита и цены уборки. Обратите внимание на тип данных, наличие значка $ и запятых в больших суммах. Для какого типа жилья среднее значение залога наибольшее?
+
+room_type – тип сдаваемого жилья 
+price – цена за ночь
+security_deposit – залог за сохранность имущества
+cleaning_fee – плата за уборку'''
+
+SELECT 
+room_type,
+AVG(toFloat32OrNull(replaceRegexpAll(price,'[$,]','')))  AS AVG_price,
+toFloat32OrNull(replaceRegexpAll(security_deposit,'[$,]',''))  AS security_deposit,
+toFloat32OrNull(replaceRegexpAll(cleaning_fee,'[$,]',''))  AS cleaning_fee
+
+
+FROM listings 
+GROUP by room_type , security_deposit ,cleaning_fee
+ORDER BY security_deposit DESC
+LIMIT 100
+
+
