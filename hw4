@@ -67,3 +67,15 @@ FROM listings
 GROUP by host_id
 ORDER BY avg_price DESC
 LIMIT 100
+
+4.7
+'''
+SELECT 
+host_id,
+groupArray(id),
+MAX(toFloat32OrNull(replaceRegexpAll(price,'[$,]',''))) - MIN(toFloat32OrNull(replaceRegexpAll(price,'[$,]',''))) AS dif_price
+FROM listings 
+GROUP by host_id
+ORDER BY dif_price DESC
+LIMIT 100
+'''
