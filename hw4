@@ -138,4 +138,24 @@ GROUP by neighbourhood_cleansed
 ORDER BY AVG_square DESC
 LIMIT 100
 
+4.11
+'''
+Напоследок давайте посмотрим, какая из представленных комнат расположена ближе всего к центру города. В качестве ответа укажите id объявления.
 
+id – идентификатор жилья (объявления)
+room_type – тип жилья ('Private room')
+latitude – широта
+longitude – долгота
+52.5200 с.ш., 13.4050 в.д – координаты центра Берлина
+'''
+SELECT 
+
+id,
+geoDistance(13.4050, 52.5200, toFloat32OrNull(longitude), toFloat32OrNull(latitude)) as Dist
+
+FROM listings 
+WHERE room_type = 'Private room'
+GROUP by id, Dist
+
+ORDER BY Dist ASC
+LIMIT 100
