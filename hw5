@@ -21,3 +21,34 @@ WHERE
 ORDER BY reviews_per_month DESC,review_scores_rating1 DESC
 
 LIMIT 100
+
+5.5
+
+'''Посчитайте среднее расстояние до центра города и выведите идентификаторы объявлений о сдаче отдельных комнат, для которых расстояние оказалось меньше среднего. Результат отсортируйте по убыванию, тем самым выбрав комнату, которая является наиболее удаленной от центра, но при этом расположена ближе, чем остальные комнаты в среднем. 
+
+id – идентификатор объявления
+host_id – идентификатор хозяина
+room_type – тип жилья ('Private room')
+latitude – широта
+longitude – долгота
+52.5200 с.ш., 13.4050 в.д – координаты центра Берлина
+В качестве ответа укажите идентификатор хозяина (host_id), сдающего данную комнату.'''
+
+
+SELECT 
+
+id,
+host_id,
+geoDistance(13.4050, 52.5200, toFloat32OrNull(longitude), toFloat32OrNull(latitude)) as dist
+--room_type
+FROM listings
+
+WHERE
+ ( dist  < 
+ (SELECT  AVG(geoDistance(13.4050, 52.5200, toFloat32OrNull(longitude), toFloat32OrNull(latitude) )) FROM listings where room_type ='Private room'  )
+    ) and (room_type ='Private room')
+
+
+ORDER BY dist DESC
+
+LIMIT 100
