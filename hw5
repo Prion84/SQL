@@ -52,3 +52,35 @@ WHERE
 ORDER BY dist DESC
 
 LIMIT 100
+5.6 
+'''Представим, что вы планируете снять жилье в Берлине на 7 дней, используя более хитрые фильтры, чем предлагаются на сайте.
+
+В этой задаче можно потренироваться в написании подзапросов, но задание можно решить и без них.
+
+Отберите объявления из таблицы listings, которые:
+
+находятся на расстоянии от центра меньше среднего (здесь нам пригодится запрос из предыдущего задания)
+обойдутся дешевле 100$ в день (price с учетом cleaning_fee, который добавляется к общей сумме за неделю, т.е его нужно делить на кол-во дней)
+имеют последние отзывы (last_review), начиная с 1 сентября 2018 года
+имеют WiFi в списке удобств (amenities)
+Отсортируйте полученные значения по убыванию review_scores_rating (не забудьте перевести строку к численному виду) и в качестве ответа укажите host_id из первой строки. '''
+
+SELECT 
+id,
+host_id,
+geoDistance(13.4050, 52.5200, toFloat32OrNull(longitude), toFloat32OrNull(latitude)) as dist,
+toFloat32OrNull(replaceRegexpAll(price,'[$,]','')) + (toFloat32OrNull(replaceRegexpAll(cleaning_fee,'[$,]',''))/7) as price_plus,
+last_review,
+amenities,
+toFloat32OrNull(review_scores_rating) as review_scores_rating_convert
+FROM listings
+
+WHERE
+ ( dist  < 
+ (SELECT  AVG(geoDistance(13.4050, 52.5200, toFloat32OrNull(longitude), toFloat32OrNull(latitude) )) FROM listings  )
+    )  and (price_plus < 100) and toDateOrZero(last_review) >= '2018-09-01' and multiSearchAnyCaseInsensitive(amenities, ['WiFi']) = 1
+
+
+ORDER BY review_scores_rating_convert DESC
+
+LIMIT 100
