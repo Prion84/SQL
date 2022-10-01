@@ -155,4 +155,54 @@ BuyDate — дата, за которую собрана статистика.
 DeviceID — идентификатор устройства;
 UserID — идентификатор пользователя.'''
 
-5.9
+5.10
+'''
+Используйте таблицу checks и разделите всех покупателей на сегменты:
+
+NB! Правые границы берутся не включительно, например, чек в 10 рублей будет относиться к сегменту С
+
+А — средний чек покупателя менее 5 ₽
+B — средний чек покупателя от 5-10 ₽
+C — средний чек покупателя от 10-20 ₽
+D — средний чек покупателя от 20 ₽
+Отсортируйте результирующую таблицу по возрастанию UserID и укажите сегмент четвертого пользователя.'''
+SELECT
+    UserID,
+    avg(Rub) AS avg_check,
+    CASE
+        WHEN avg_check < 5 THEN 'A'
+        WHEN avg_check < 10 THEN 'B'
+        WHEN avg_check < 20 THEN 'C'
+        ELSE 'D'
+    END AS group_name
+FROM checks
+GROUP BY UserID
+ORDER BY UserID ASC
+LIMIT 10
+
+5.11 
+'''Используйте предыдущий запрос как подзапрос и посчитайте, сколько клиентов приходится на каждый сегмент и сколько доходов он приносит.
+Отсортируйте результат по убыванию суммы доходов на сегмент и в качестве ответа укажите наибольшую сумму.'''
+SELECT
+    r.group_name AS group_name,
+    sum(l.Rub) AS Rub
+FROM checks AS l
+-- объединим таблицу checks (где есть сумма чека каждой покупки) и таблицу из прошлого задания (где есть сегмент покупателя)
+JOIN
+    (
+    SELECT
+        UserID,
+        avg(Rub) AS avg_check,
+        CASE
+            WHEN avg_check < 5 THEN 'A'
+            WHEN avg_check < 10 THEN 'B'
+            WHEN avg_check < 20 THEN 'C'
+            ELSE 'D'
+        END AS group_name
+    FROM checks
+    GROUP BY UserID
+    ) AS r
+    ON l.UserID = r.UserID
+GROUP BY group_name
+ORDER BY Rub DESC
+
