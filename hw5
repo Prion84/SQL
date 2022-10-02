@@ -273,3 +273,6 @@ ALTER TABLE test.reviews MODIFY COLUMN created_at Date
 
 Hint: конспект. Также обратите внимание на отсутствие пробела между кавычками. '''
 ALTER TABLE test.reviews DELETE WHERE comments=''
+5.2.5
+'''С помощью какого запроса можно создать обычное представление над таблицей test.reviews, которое будет содержать все записи из test.reviews, сгруппированные по reviewer_id с подсчитанным количеством отзывов (id) на каждого пользователя?'''
+CREATE VIEW test.reviews_number AS (SELECT reviewer_id, COUNT(id) reviews_count FROM test.reviews GROUP BY reviewer_id)
