@@ -120,3 +120,62 @@ WHERE Quantity > 0
 GROUP BY Country, InvoiceNo)
 GROUP BY Country
 ORDER BY AVG(TotalPrice) DESC
+
+7.7
+'''Как изменялась средняя сумма заказа в разных странах по месяцам?
+
+Предположим, нас интересует динамика в следующих странах: United Kingdom, Germany, France, Spain, Netherlands, Belgium, Switzerland, Portugal, Australia, USA. Визуализируйте результат и выберите верные утверждения.'''
+SELECT
+    Country,   
+    Month,    
+    AVG(Price) AS AOV   
+FROM (
+    SELECT   
+        InvoiceNo,      
+        SUM(Quantity * UnitPrice) AS Price,     
+        toStartOfMonth(InvoiceDate) AS Month,       
+        Country       
+    FROM default.retail   
+    WHERE Quantity > 0 
+    GROUP BY InvoiceNo, Country, Month   
+    ORDER BY InvoiceNo   
+    )  
+WHERE Country In ('United Kingdom', 'Germany', 'France', 'Spain', 'Netherlands', 'Belgium', 'Switzerland', 'Portugal', 'Australia', 'USA')
+GROUP BY Country, Month
+
+Аномальный рост среднего чека произошел в августе 2011 среди пользователей из Австралии
+Самые большие значения среднего чека наблюдаются в Австралии и Нидерландах.
+Примерно до октября средний чек США постепенно рос
+
+7.8
+'''Сколько товаров пользователи обычно добавляют в корзину? Посчитайте среднее количество товаров, добавленных в корзину, с разбивкой по странам. 
+
+В качестве ответа укажите среднее число товаров в заказе среди пользователей в Канаде (Canada). Разделитель - точка.'''
+SELECT Country,
+       avg(count_stock) AS avg_count       
+FROM (
+    SELECT Country,    
+            SUM(Quantity) as count_stock         
+    FROM default.retail   
+    WHERE Quantity > 0    
+    GROUP BY Country, InvoiceNo)    
+GROUP BY Country
+ORDER BY avg_count DESC
+
+460.5
+
+7.9
+'''
+Возможно, результат на предыдущем шаге показался вам странным, особенно если соотнести средний размер корзины с числом уникальных пользователей в некоторых странах. 
+
+Посмотрим на Нидерланды (Netherlands) более подробно. Сгруппируйте данные по пользователям и посмотрите, кто купил наибольшее число товаров. В ответе укажите идентификатор данного пользователя. 
+
+SELECT CustomerID,
+       SUM(Quantity) AS sum_quantity       
+FROM default.retail
+WHERE Quantity > 0 AND Country = 'Netherlands'
+GROUP BY CustomerID
+ORDER BY sum_quantity DESC
+
+14646
+'''
