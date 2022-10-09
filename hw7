@@ -78,3 +78,15 @@ WHERE
 GROUP BY Country
 HAVING Country IN ('United Kingdom', 'Australia', 'Netherlands')
 ORDER BY uniq_users ASC
+
+7.5
+'''4. Как вы могли заметить, график с предыдущего шага получается не очень информативным для 2 из 3 стран. Давайте посмотрим на динамику изменения числа активных пользователей в месяц уже для всех стран, кроме Великобритании.
+
+В каких месяцах число активных пользователей во Франции было больше, чем в Германии?'''
+
+SELECT Country,
+       COUNT(DISTINCT CustomerID) AS uniq_users,       
+       toStartOfMonth(InvoiceDate) AS month       
+FROM default.retail
+WHERE Country IN ('France', 'Germany')    
+GROUP BY Country, month
