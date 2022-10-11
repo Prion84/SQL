@@ -95,3 +95,28 @@ WINDOW w AS
 ORDER BY
     region DESC,
     date ASC
+8.11
+'''
+ Теперь посчитайте скользящее среднее цены авокадо (average_price) в Нью-Йорке с разбивкой по типу авокадо. В качестве окна используйте текущую неделю и предыдущие две (обратите внимание, что в данной таблице в строках содержатся данные за неделю, а не за один день). Например 04/01/15, 11/01/15 и 18/01/15 для подсчета значения для 18/01/15.
+'''
+
+SELECT
+    region,
+    type,
+    date,
+    average_price,
+   AVG(average_price) OVER w AS rolling_price
+
+FROM 
+    avocado
+WHERE region in ('NewYork')  
+WINDOW w AS
+    (
+    PARTITION BY type
+
+    ORDER BY date ASC
+    ROWS BETWEEN 2 PRECEDING AND CURRENT ROW 
+    )
+ORDER BY
+    region DESC,
+    date ASC
